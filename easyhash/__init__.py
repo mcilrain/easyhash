@@ -1,10 +1,13 @@
 import os
-import logging
 import time
+import zlib
+import logging
 import hashlib
-from binascii import unhexlify
+import binascii
 from typing import BinaryIO, Union, Dict, Optional, Iterable
-from zlib import adler32, crc32
+
+
+__all__ = ['get_size_of_stream', 'get_hashes_of_stream']
 
 
 LOGGER_NAME = "easyhash"
@@ -114,9 +117,9 @@ def get_hashes_of_stream(
             hash_obj.update(chunk)
         # crc32 and adler32 use different API
         if "crc32" in algorithms:
-            crc32_value = crc32(chunk, crc32_value)
+            crc32_value = zlib.crc32(chunk, crc32_value)
         if "adler32" in algorithms:
-            adler32_value = adler32(chunk, adler32_value)
+            adler32_value = zlib.adler32(chunk, adler32_value)
     # get hash digests
     hash_digests: Dict[str, Union[str, bytes]] = {}
     for algo, hash_obj in hashes.items():
@@ -128,8 +131,8 @@ def get_hashes_of_stream(
             else:
                 message = "unsupported shake algorithm: %s" % algo
                 raise ValueError(message)
-            # type: ignore
-            hash_digests[algo] = hash_obj.hexdigest(hash_length)
+            hash_digests[algo] = hash_obj.hexdigest(  # type: ignore
+                hash_length)
         else:
             hash_digests[algo] = hash_obj.hexdigest()
     # crc32 and adler32 use different API
@@ -140,7 +143,7 @@ def get_hashes_of_stream(
     # convert hashes to binary if requested
     if binary:
         for algo, hash_digest in hash_digests.items():
-            hash_digests[algo] = unhexlify(hash_digest)
+            hash_digests[algo] = binascii.unhexlify(hash_digest)
     # track when the hashing finished
     hashing_finished_at = time.clock()
     # determine time taken to hash
