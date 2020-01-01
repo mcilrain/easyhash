@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
     name='easyhash',
     packages=['easyhash'],
-    version='1.0',
+    version='1.1',
     license='MIT',
     description='Simplified interface for hashing streams',
     author='Noah McIlraith',
