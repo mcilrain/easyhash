@@ -7,8 +7,8 @@ setup(
     description='Simplified interface for hashing streams',
     author='Noah McIlraith',
     author_email='noah.mcilraith@gmail.com',
-    url='https://github.com/user/reponame',   # Provide either the link to your github or to your website
-    download_url='https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+    url='https://github.com/mcilrain/easyhash',
+    download_url='https://github.com/mcilrain/easyhash/archive/v1.0.tar.gz',
     keywords=['hashing'],
     install_requires=[],
     classifiers=[
