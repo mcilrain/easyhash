@@ -1,4 +1,3 @@
-import os
 import time
 import zlib
 import logging
@@ -7,7 +6,7 @@ import binascii
 from typing import BinaryIO, Union, Dict, Optional, Iterable
 
 
-__all__ = ['get_size_of_stream', 'get_hashes_of_stream']
+__all__ = ['get_hashes_of_stream']
 
 
 LOGGER_NAME = "easyhash"
@@ -18,32 +17,10 @@ SUPPORTED_ALGORITHMS = [
 
 
 def _better_hex(i, l):
-    a = "{0:#0{1}x}".format(i, l)
-    a = a[2:]
+    a = "{0:#0{1}x}".format(i, l)[2:]
     if len(a) % 2 == 1:
         a = "0" + a
     return a
-
-
-def get_size_of_stream(stream: BinaryIO) -> int:
-    """Get the size of a stream.
-
-    Arguments:
-        stream: File-like object to get the size of.
-
-    Returns:
-        Integer of the size of the stream.
-
-    >>> from io import BytesIO
-    >>> get_size_of_stream(BytesIO(b"testing"))
-    7
-    """
-    if not stream.tell() == 0:
-        raise ValueError("`stream` must be at position 0")
-    stream.seek(0, os.SEEK_END)
-    size = stream.tell()
-    stream.seek(0)
-    return size
 
 
 def get_hashes_of_stream(
@@ -77,9 +54,9 @@ def get_hashes_of_stream(
     '098f6bcd4621d373cade4e832627b4f6'
     """
     logger = logging.getLogger(LOGGER_NAME)
-    logger.info("hashing %r", stream)
+    logger.debug("hashing %r", stream)
     # track when the hashing started
-    hashing_started_at = time.clock()
+    hashing_started_at = time.perf_counter()
     # default set of hash algorithms to use
     if algorithms is None:
         algorithms = SUPPORTED_ALGORITHMS
@@ -145,10 +122,10 @@ def get_hashes_of_stream(
         for algo, hash_digest in hash_digests.items():
             hash_digests[algo] = binascii.unhexlify(hash_digest)
     # track when the hashing finished
-    hashing_finished_at = time.clock()
+    hashing_finished_at = time.perf_counter()
     # determine time taken to hash
     hashing_duration = hashing_finished_at - hashing_started_at
     # log duration
-    logger.info("%r hashed in %dms", stream, hashing_duration * 1000)
+    logger.debug("%r hashed in %dms", stream, hashing_duration * 1000)
     # all done
     return hash_digests

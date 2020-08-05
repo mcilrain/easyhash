@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
     name='easyhash',
     packages=['easyhash'],
-    version='1.1',
+    version='1.2',
     license='MIT',
     description='Simplified interface for hashing streams',
     author='Noah McIlraith',
     author_email='noah.mcilraith@gmail.com',
     url='https://github.com/mcilrain/easyhash',
-    download_url='https://github.com/mcilrain/easyhash/archive/v1.1.tar.gz',
+    download_url='https://github.com/mcilrain/easyhash/archive/v1.2.tar.gz',
     keywords=['hashing'],
     install_requires=[],
     classifiers=[
